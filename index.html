@@ -1,0 +1,70 @@
+<html>
+<head>
+	<title>Sort JSON Object by Key</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+<body ng-app="myApp">
+	<div ng-controller="SortJsonCtrl" class="container">
+		<h3>Sort JSON Object By Key</h3>
+		<div class="form-group">
+			<label for="obj">JSON Object</label>
+			<textarea class="form-control" ng-model="data" id="obj"></textarea>
+		</div>
+		<button class="btn btn-success" ng-click="sort(data)">Sort</button>
+		<br/><br/>
+		<pre>
+			{{result | json}}
+		</pre>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+
+	<script>
+		var app = angular.module('myApp', []);
+
+		app.controller("SortJsonCtrl", function($scope) {
+			$scope.sort = function(newVal) {
+				if(newVal) {
+					var myObj,
+					keys = [],
+				    k, i, len;
+
+				    try {
+				    	myObj = angular.fromJson(newVal);
+				    } catch(err) {
+				    	try {
+				    		newVal = newVal.replace(/'/g, '"');
+				    		newVal = newVal.replace(/value/g, '"value"');
+				    		myObj = angular.fromJson(newVal);
+				    	} catch(err) {
+				    		alert("Could not parse your JSON");
+				    	}
+				    }
+
+					for (k in myObj)
+					{
+					    if (myObj.hasOwnProperty(k))
+					    {
+					        keys.push(k);
+					    }
+					}
+
+					keys.sort();
+
+					len = keys.length;
+
+					$scope.result = {};
+
+					for (i = 0; i < len; i++)
+					{
+					    k = keys[i];
+					    $scope.result[k] = myObj[k];
+					}
+				}
+			};
+		});
+	</script>
+</body>
+</html>
